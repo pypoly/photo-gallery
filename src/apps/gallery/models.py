@@ -28,7 +28,7 @@ class Photo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     thumbnail = models.ImageField(upload_to=get_upload_thumbnail_path, null=True, blank=True)
     created_at = models.DateTimeField(null=True, blank=True)
-    uploaded_at = models.DateTimeField(auto_now=True)
+    uploaded_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     album = models.ForeignKey('gallery.Album', on_delete=models.RESTRICT, null=True, blank=True)
 
 def get_album_path(instance, filename):
