@@ -1,10 +1,12 @@
+import os
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls import reverse
 from django.views.generic import ListView, UpdateView, DetailView, CreateView, DeleteView
 
-from apps.gallery.forms import UpdatePhotoForm, PhotoForm
+from apps.gallery.forms import UpdatePhotoForm, PhotoForm, PhotoCreateForm
 from apps.gallery.models import Photo, Album
 
 # список фото
@@ -20,11 +22,16 @@ class PhotoDetailView(LoginRequiredMixin, DetailView):
 # создание фото
 class PhotoCreateView(LoginRequiredMixin, CreateView):
     model = Photo
-    form_class = PhotoForm
-    template_name = 'gallery/photo_form.html'
+    form_class = PhotoCreateForm
+    template_name = 'gallery/photo_create.html'
 
     def get_success_url(self):
-        return reverse('photo_detail', kwargs={'id': self.object.id})
+        return reverse('photo', kwargs={'pk': self.object.id})
+
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 # редактирование фото
 class PhotoUpdateView(LoginRequiredMixin, UpdateView):
@@ -32,11 +39,21 @@ class PhotoUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'gallery/photo_update.html'
     form_class =  UpdatePhotoForm
 
+    def get_success_url(self):
+        return reverse('photo', kwargs={'pk': self.object.id})
+
+
 # удаление фото
 class PhotoDeleteView(LoginRequiredMixin, DeleteView):
     model = Photo
-    template_name = 'gallery/delete_post.html'
+    template_name = 'gallery/photo_delete.html'
     success_url = '/'
+
+    def post(self, request, *args, **kwargs):
+        path = self.get_object().image.path
+        if os.path.exists(path):
+           os.unlink(path)
+        return super().post(request, *args, **kwargs)
 
 
 # =====================================
