@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %}Фото {{ object.pk }} — Фотогалерея{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <a href="{% url 'gallery' %}" class="btn btn-outline-secondary rounded-pill">
+            <i class="bi bi-arrow-left"></i> Назад к фото
+        </a>
+        <div class="d-flex gap-2">
+            <a href="{% url 'update_photo' object.pk %}" class="btn btn-outline-secondary rounded-circle p-2"
+               title="Редактировать">
+                <i class="bi bi-pencil"></i>
+            </a>
+            <a href="{% url 'delete_photo' object.pk %}" class="btn btn-outline-danger rounded-circle p-2"
+               title="Удалить">
+                <i class="bi bi-trash"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-body-secondary">
+                {% if object.image %}
+                    <a href="{{ object.image.url }}" data-bs-toggle="modal" data-bs-target="#photoModal"
+                       class="d-block text-center p-2">
+                        <img src="{{ object.image.url }}" alt="Фото {{ object.pk }}"
+                             class="img-fluid rounded-3 object-fit-contain"
+                             style="max-height: 75vh;">
+                    </a>
+                {% else %}
+                    <div class="d-flex align-items-center justify-content-center" style="min-height: 50vh;">
+                        <i class="bi bi-image text-secondary" style="font-size: 5rem;"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body">
+                    <h5 class="card-title d-flex align-items-center gap-2 mb-4">
+                        <i class="bi bi-image text-primary"></i>
+                        Информация
+                    </h5>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
+                            <span class="text-body-secondary">
+                                <i class="bi bi-calendar3 me-2"></i>Загружено
+                            </span>
+                            <span class="text-body">{{ object.uploaded_at|date:'d.m.Y H:i' }}</span>
+                        </li>
+                        {% if object.created_at %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
+                                <span class="text-body-secondary">
+                                    <i class="bi bi-camera me-2"></i>Снято
+                                </span>
+                                <span class="text-body">{{ object.created_at|date:'d.m.Y H:i' }}</span>
+                            </li>
+                        {% endif %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
+                            <span class="text-body-secondary">
+                                <i class="bi bi-person me-2"></i>Автор
+                            </span>
+                            <span class="text-body">{{ object.user.username }}</span>
+                        </li>
+                        {% if object.album %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
+                                <span class="text-body-secondary">
+                                    <i class="bi bi-folder me-2"></i>Альбом
+                                </span>
+                                <span class="text-body">{{ object.album.name }}</span>
+                            </li>
+                        {% endif %}
+                        {% if object.thumbnail %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
+                                <span class="text-body-secondary">
+                                    <i class="bi bi-check-circle me-2"></i>Превью
+                                </span>
+                                <span class="text-body text-success">Есть</span>
+                            </li>
+                        {% else %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
+                                <span class="text-body-secondary">
+                                    <i class="bi bi-x-circle me-2"></i>Превью
+                                </span>
+                                <span class="text-body text-danger">Нет</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="photoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content bg-body">
+                <div class="modal-body d-flex align-items-center justify-content-center p-0">
+                    <img src="{{ object.image.url }}" alt="Фото {{ object.pk }}" class="img-fluid">
+                </div>
+                <div class="modal-footer border-0 d-flex justify-content-between">
+                    <span class="text-body-secondary small">Фото {{ object.pk }} &mdash; {{ object.uploaded_at|date:'d.m.Y H:i' }}</span>
+                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
