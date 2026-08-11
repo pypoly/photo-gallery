@@ -1,6 +1,48 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.urls import reverse
+from django.views.generic import ListView, UpdateView, DetailView, CreateView, DeleteView
 
-#
-# def index(request):
-#     return  render(request,
+from apps.gallery.forms import UpdatePhotoForm, PhotoForm
+from apps.gallery.models import Photo, Album
+
+# список фото
+class PhotoListView(LoginRequiredMixin, ListView):
+    model = Photo
+    template_name = 'gallery/photo_list.html'
+
+# детали одного фото
+class PhotoDetailView(LoginRequiredMixin, DetailView):
+    model = Photo
+    template_name = 'gallery/photo_detail.html'
+
+# создание фото
+class PhotoCreateView(LoginRequiredMixin, CreateView):
+    model = Photo
+    form_class = PhotoForm
+    template_name = 'gallery/photo_form.html'
+
+    def get_success_url(self):
+        return reverse('photo_detail', kwargs={'id': self.object.id})
+
+# редактирование фото
+class PhotoUpdateView(LoginRequiredMixin, UpdateView):
+    model = Photo
+    template_name = 'gallery/photo_update.html'
+    form_class =  UpdatePhotoForm
+
+# удаление фото
+class PhotoDeleteView(LoginRequiredMixin, DeleteView):
+    model = Photo
+    template_name = 'gallery/delete_post.html'
+    success_url = '/'
+
+
+# =====================================
+
+class AlbumListView(ListView):
+    model = Album
+    template_name = 'gallery/album_list.html'
+    queryset = Album.objects.filter(private=False)
+
