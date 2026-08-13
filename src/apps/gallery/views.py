@@ -8,7 +8,7 @@ from django.views.generic import ListView, UpdateView, DetailView, CreateView, D
 
 from apps.gallery.forms import UpdatePhotoForm, PhotoCreateForm, AlbumCreateForm, AlbumUpdateForm
 from apps.gallery.models import Photo, Album
-
+from .tasks import create_thumbnail
 # список фото
 class PhotoListView(LoginRequiredMixin, ListView):
     model = Photo
@@ -34,7 +34,9 @@ class PhotoCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        create_thumbnail.delay(form.instance.id)
+        return response
 
 # редактирование фото
 class PhotoUpdateView(LoginRequiredMixin, UpdateView):
