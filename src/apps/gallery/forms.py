@@ -2,10 +2,20 @@ from django import forms
 
 from apps.gallery.models import Photo, Album
 
-class PhotoForm(forms.ModelForm):
+
+class PhotoCreateForm(forms.ModelForm):
     class Meta:
         model = Photo
-        fields = ('image',)
+        fields = ('image', 'album')
+        widgets = {
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'album': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['album'].required = True
+        self.fields['album'].queryset = Album.objects.filter(private=False)
 
 class UpdatePhotoForm(forms.ModelForm):
     class Meta:
@@ -18,12 +28,28 @@ class UpdatePhotoForm(forms.ModelForm):
             ),
         }
 
-class UpdateAlbumForm(forms.ModelForm):
+
+# =================================================================================
+
+class AlbumCreateForm(forms.ModelForm):
+    class Meta:
+        model = Album
+        fields = ('name', 'private')
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Например, Отпуск 2026'}),
+            'private': forms.CheckboxInput(attrs={'class': 'form-check-input', 'role': 'switch'}),
+        }
+
+
+class AlbumUpdateForm(forms.ModelForm):
     class Meta:
         model = Album
         fields = ('thumbnail', 'name', 'private')
+        widgets = {
+            'thumbnail': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'private': forms.CheckboxInput(attrs={'class': 'form-check-input', 'role': 'switch'}),
+        }
 
-class PhotoCreateForm(forms.ModelForm):
-    class Meta:
-        model = Photo
-        fields = ('image',)
+
+
