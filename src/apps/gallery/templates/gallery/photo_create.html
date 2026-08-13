@@ -1,8 +1,82 @@
 {% extends 'base.html' %}
+{% block title %}Загрузить фото — Фотогалерея{% endblock %}
+
 {% block content %}
-    <form action="{% url "add_photo" %}" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-        {{ form }}
-    <button type="submit">Сохранить</button>
-    </form>
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <a href="{% url 'gallery' %}" class="btn btn-outline-secondary rounded-pill">
+            <i class="bi bi-arrow-left"></i> Назад
+        </a>
+        <h1 class="h4 mb-0">Загрузить фото</h1>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <form action="{% url 'add_photo' %}" method="POST" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                        {% endif %}
+
+                        <div class="mb-4">
+                            <label for="{{ form.image.id_for_label }}" class="form-label">
+                                <i class="bi bi-image me-1"></i>Фото
+                            </label>
+
+                            <div class="rounded-4 overflow-hidden bg-body-secondary mb-3">
+                                <div class="ratio ratio-4x3">
+                                    <div class="d-flex align-items-center justify-content-center" id="photoPreview">
+                                        <i class="bi bi-cloud-arrow-up text-secondary" style="font-size: 3rem;"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{ form.image }}
+                            {% if form.image.errors %}
+                                <div class="invalid-feedback d-block">{{ form.image.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.album.id_for_label }}" class="form-label">
+                                <i class="bi bi-folder me-1"></i>Альбом
+                            </label>
+                            {{ form.album }}
+                            {% if form.album.errors %}
+                                <div class="invalid-feedback d-block">{{ form.album.errors }}</div>
+                            {% endif %}
+                            <div class="form-text">Фото нужно обязательно привязать к альбому.</div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% url 'gallery' %}" class="btn btn-outline-secondary rounded-pill px-4">Отмена</a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                <i class="bi bi-check-lg"></i> Загрузить
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        (function () {
+            const input = document.getElementById('{{ form.image.id_for_label }}');
+            const preview = document.getElementById('photoPreview');
+            input.addEventListener('change', function () {
+                const file = input.files && input.files[0];
+                if (!file) return;
+                preview.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.className = 'w-100 h-100 object-fit-cover';
+                preview.appendChild(img);
+            });
+        })();
+    </script>
 {% endblock %}
