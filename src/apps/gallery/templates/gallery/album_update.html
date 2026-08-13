@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Редактирование «{{ object.name }}» — Фотогалерея{% endblock %}
+
+{% block content %}
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <a href="{% url 'detail_album' object.pk %}" class="btn btn-outline-secondary rounded-pill">
+            <i class="bi bi-arrow-left"></i> Назад
+        </a>
+        <h1 class="h4 mb-0">Редактирование альбома</h1>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    {% if object.thumbnail %}
+                        <div class="text-center mb-4">
+                            <img src="{{ object.thumbnail.url }}" alt="Превью"
+                                 class="rounded-3 shadow-sm object-fit-cover" style="width: 160px; height: 160px;">
+                        </div>
+                    {% endif %}
+
+                    <form action="{% url 'update_album' pk=object.id %}" method="POST" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label for="{{ form.thumbnail.id_for_label }}" class="form-label">
+                                <i class="bi bi-image me-1"></i>Превью
+                            </label>
+                            {{ form.thumbnail }}
+                            {% if form.thumbnail.errors %}
+                                <div class="invalid-feedback d-block">{{ form.thumbnail.errors }}</div>
+                            {% endif %}
+                            <div class="form-text">Оставьте пустым, если не нужно менять превью.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">
+                                <i class="bi bi-folder me-1"></i>Название
+                            </label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="invalid-feedback d-block">{{ form.name.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-check form-switch mb-4">
+                            {{ form.private }}
+                            <label for="{{ form.private.id_for_label }}" class="form-check-label">
+                                <i class="bi bi-lock me-1"></i>Приватный альбом
+                            </label>
+                            {% if form.private.errors %}
+                                <div class="invalid-feedback d-block">{{ form.private.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% url 'detail_album' object.pk %}" class="btn btn-outline-secondary rounded-pill px-4">Отмена</a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                <i class="bi bi-check-lg"></i> Сохранить
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

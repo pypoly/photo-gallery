@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Новый альбом — Фотогалерея{% endblock %}
+
+{% block content %}
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <a href="{% url 'album_list' %}" class="btn btn-outline-secondary rounded-pill">
+            <i class="bi bi-arrow-left"></i> Назад
+        </a>
+        <h1 class="h4 mb-0">Новый альбом</h1>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <form action="{% url 'add_album' pk=user.pk %}" method="POST" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">
+                                <i class="bi bi-folder me-1"></i>Название
+                            </label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="invalid-feedback d-block">{{ form.name.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-check form-switch mb-4">
+                            {{ form.private }}
+                            <label for="{{ form.private.id_for_label }}" class="form-check-label">
+                                <i class="bi bi-lock me-1"></i>Приватный альбом
+                            </label>
+                            {% if form.private.errors %}
+                                <div class="invalid-feedback d-block">{{ form.private.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% url 'album_list' %}" class="btn btn-outline-secondary rounded-pill px-4">Отмена</a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                <i class="bi bi-check-lg"></i> Создать
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

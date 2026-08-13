@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Фотогалерея{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        .icon-dark { display: none; }
+        [data-bs-theme="dark"] .icon-dark { display: inline; }
+        [data-bs-theme="dark"] .icon-light { display: none; }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-body-tertiary d-flex flex-column min-vh-100">
+
+<nav class="navbar navbar-expand-lg bg-body border-bottom shadow-sm">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand d-flex align-items-center gap-2 fw-semibold" href="{% url 'gallery' %}">
+            <i class="bi bi-images text-primary fs-3"></i>
+            <span>Фотогалерея</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar" aria-expanded="false" aria-label="Меню">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'gallery' %}">
+                        <i class="bi bi-collection"></i> Фото
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'album_list' %}" class="nav-link">
+                        <i class="bi bi-image"></i> Альбомы
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'add_photo' %}">
+                        <i class="bi bi-upload"></i> Загрузить
+                    </a>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center gap-1">
+                <button class="btn border-0 rounded-circle p-2 text-body-secondary" type="button" title="Поиск">
+                    <i class="bi bi-search"></i>
+                </button>
+
+                <button class="btn border-0 rounded-circle p-2 text-body-secondary" type="button"
+                        id="themeToggle" title="Переключить тему">
+                    <i class="bi bi-sun-fill icon-light"></i>
+                    <i class="bi bi-moon-fill icon-dark"></i>
+                </button>
+
+                {% if user.is_authenticated %}
+                    <div class="dropdown ms-1">
+                        <button class="btn btn-outline-secondary dropdown-toggle rounded-pill d-flex align-items-center gap-2"
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle fs-5"></i>
+                            <span class="d-none d-sm-inline">{{ user.username }}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><span class="dropdown-item-text small text-muted">{{ user.email }}</span></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/admin/"><i class="bi bi-gear"></i> Настройки</a></li>
+                            <li>
+                                <form method="post" action="{% url 'admin:logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="bi bi-box-arrow-right"></i> Выйти
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <a class="btn btn-primary rounded-pill px-4 ms-1" href="/admin/login/">Войти</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+{% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<main class="container-fluid flex-grow-1 py-4 px-4">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="bg-body border-top py-3">
+    <div class="container-fluid px-4 text-center text-body-secondary small">
+        &copy; {% now "Y" %} Фотогалерея
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    (function () {
+        const root = document.documentElement;
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            root.setAttribute('data-bs-theme', 'dark');
+        }
+        document.getElementById('themeToggle').addEventListener('click', function () {
+            const next = root.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-bs-theme', next);
+            localStorage.setItem('theme', next);
+        });
+    })();
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
