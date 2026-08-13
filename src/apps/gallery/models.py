@@ -46,6 +46,10 @@ class Album(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     thumbnail = models.ImageField(upload_to=get_album_path, null=True)
 
+    def __str__(self):
+        return self.name
+
+
 
 
 
