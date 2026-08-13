@@ -1,15 +1,15 @@
 import os
 from datetime import datetime
 from io import BytesIO
-from django.core.files.base import ContentFile
+
 from PIL import Image
-from celery import Celery
-from django.core.files.uploadedfile import UploadedFile
-from django.tasks import task
+from django.core.files.base import ContentFile
 
 from apps.gallery.forms import UpdatePhotoForm
 from apps.gallery.models import Photo
 from main.celery import app
+
+DATETIME_FORMAT = '%Y:%m:%d %H:%M:%S'
 
 
 @app.task
@@ -53,8 +53,14 @@ def to_jpg(path):
     return img
 
 
-def get_creation_date(path) -> datetime:
-    return datetime.now()
+def get_creation_date(path) -> datetime|None:
+    a = Image.open(path)
+    exif = a.getexif()
+    date = exif.get(306)
+    if date:
+        return datetime.strptime(date, DATETIME_FORMAT)
+    else:
+        return None
 
 
 def to_content_file(img: Image.Image, name) -> ContentFile:
