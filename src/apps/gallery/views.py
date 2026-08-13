@@ -6,13 +6,16 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.views.generic import ListView, UpdateView, DetailView, CreateView, DeleteView
 
-from apps.gallery.forms import UpdatePhotoForm, PhotoForm, PhotoCreateForm
+from apps.gallery.forms import UpdatePhotoForm, PhotoCreateForm, AlbumCreateForm, AlbumUpdateForm
 from apps.gallery.models import Photo, Album
 
 # список фото
 class PhotoListView(LoginRequiredMixin, ListView):
     model = Photo
     template_name = 'gallery/photo_list.html'
+
+    def get_queryset(self):
+        return Photo.objects.filter(user=self.request.user)
 
 # детали одного фото
 class PhotoDetailView(LoginRequiredMixin, DetailView):
@@ -58,8 +61,41 @@ class PhotoDeleteView(LoginRequiredMixin, DeleteView):
 
 # =====================================
 
-class AlbumListView(ListView):
+class AlbumListView(LoginRequiredMixin, ListView):
     model = Album
     template_name = 'gallery/album_list.html'
     queryset = Album.objects.filter(private=False)
+
+class AlbumCreateView(LoginRequiredMixin, CreateView):
+    model = Album
+    form_class = AlbumCreateForm
+    template_name = 'gallery/album_create.html'
+
+    def get_success_url(self):
+        return reverse('album', kwargs={'pk': self.object.id})
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class AlbumDetailView(LoginRequiredMixin, DetailView):
+    model = Album
+    template_name = 'gallery/album_detail.html'
+
+class AlbumUpdateView(LoginRequiredMixin, UpdateView):
+    model = Album
+    form_class = AlbumUpdateForm
+    template_name = 'gallery/album_update.html'
+
+class AlbumDeleteView(LoginRequiredMixin, DeleteView):
+    model = Album
+    template_name = 'gallery/album_delete.html'
+    success_url = '/'
+
+    def post(self, request, *args, **kwargs):
+        path = self.get_object().image.path
+        if os.path.exists(path):
+            os.unlink(path)
+        return super().post(request, *args, **kwargs)
 
