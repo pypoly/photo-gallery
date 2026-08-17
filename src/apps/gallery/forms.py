@@ -1,9 +1,13 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
+from django.contrib.auth.models import User
 
 from apps.gallery.models import Photo, Album
 
 
 class PhotoCreateForm(forms.ModelForm):
+    # album = forms.ModelChoiceField(queryset=Album.objects.none())
+
     class Meta:
         model = Photo
         fields = ('image', 'album')
@@ -52,4 +56,9 @@ class AlbumUpdateForm(forms.ModelForm):
         }
 
 
-
+#
+# class UserRegisterForm(UserCreationForm):
+#     class Meta:
+#         model = User
+#         email = forms.EmailField()
+#         password = forms.CharField()
