@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="d-flex align-items-center gap-2 mb-3">
-        <a href="{% url 'detail_album' object.pk %}" class="btn btn-outline-secondary rounded-pill">
+        <a href="{% url 'gallery:detail_album' object.pk %}" class="btn btn-outline-secondary rounded-pill">
             <i class="bi bi-arrow-left"></i> Назад
         </a>
         <h1 class="h4 mb-0">Редактирование альбома</h1>
@@ -20,7 +20,7 @@
                         </div>
                     {% endif %}
 
-                    <form action="{% url 'update_album' pk=object.id %}" method="POST" enctype="multipart/form-data" novalidate>
+                    <form action="{% url 'gallery:update_album' pk=object.id %}" method="POST" enctype="multipart/form-data" novalidate>
                         {% csrf_token %}
 
                         {% if form.non_field_errors %}
@@ -59,7 +59,7 @@
                         </div>
 
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="{% url 'detail_album' object.pk %}" class="btn btn-outline-secondary rounded-pill px-4">Отмена</a>
+                            <a href="{% url 'gallery:detail_album' object.pk %}" class="btn btn-outline-secondary rounded-pill px-4">Отмена</a>
                             <button type="submit" class="btn btn-primary rounded-pill px-4">
                                 <i class="bi bi-check-lg"></i> Сохранить
                             </button>

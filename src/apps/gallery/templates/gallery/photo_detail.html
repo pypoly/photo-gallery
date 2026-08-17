@@ -3,15 +3,15 @@
 
 {% block content %}
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-        <a href="{% url 'gallery' %}" class="btn btn-outline-secondary rounded-pill">
+        <a href="{% url 'gallery:gallery' %}" class="btn btn-outline-secondary rounded-pill">
             <i class="bi bi-arrow-left"></i> Назад к фото
         </a>
         <div class="d-flex gap-2">
-            <a href="{% url 'update_photo' object.pk %}" class="btn btn-outline-secondary rounded-circle p-2"
+            <a href="{% url 'gallery:update_photo' object.pk %}" class="btn btn-outline-secondary rounded-circle p-2"
                title="Редактировать">
                 <i class="bi bi-pencil"></i>
             </a>
-            <a href="{% url 'delete_photo' object.pk %}" class="btn btn-outline-danger rounded-circle p-2"
+            <a href="{% url 'gallery:delete_photo' object.pk %}" class="btn btn-outline-danger rounded-circle p-2"
                title="Удалить">
                 <i class="bi bi-trash"></i>
             </a>
@@ -68,7 +68,9 @@
                         {% if object.album %}
                             <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
                                 <span class="text-body-secondary">
-                                    <i class="bi bi-folder me-2"></i>Альбом
+                                    <a href="{% url 'gallery:detail_album' pk=object.album.id %}">
+                                        <i class="bi bi-folder me-2"></i>Альбом
+                                    </a>
                                 </span>
                                 <span class="text-body">{{ object.album.name }}</span>
                             </li>

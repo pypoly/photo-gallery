@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="d-flex align-items-center gap-2 mb-3">
-        <a href="{% url 'album_list' %}" class="btn btn-outline-secondary rounded-pill">
+        <a href="{% url 'gallery:album_list' %}" class="btn btn-outline-secondary rounded-pill">
             <i class="bi bi-arrow-left"></i> Назад
         </a>
         <h1 class="h4 mb-0">Новый альбом</h1>
@@ -13,7 +13,7 @@
         <div class="col-md-8 col-lg-6">
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-body p-4">
-                    <form action="{% url 'add_album' pk=user.pk %}" method="POST" enctype="multipart/form-data" novalidate>
+                    <form action="{% url 'gallery:add_album'%}" method="POST" enctype="multipart/form-data" novalidate>
                         {% csrf_token %}
 
                         {% if form.non_field_errors %}
@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="{% url 'album_list' %}" class="btn btn-outline-secondary rounded-pill px-4">Отмена</a>
+                            <a href="{% url 'gallery:album_list' %}" class="btn btn-outline-secondary rounded-pill px-4">Отмена</a>
                             <button type="submit" class="btn btn-primary rounded-pill px-4">
                                 <i class="bi bi-check-lg"></i> Создать
                             </button>
