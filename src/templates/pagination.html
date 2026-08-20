@@ -16,17 +16,59 @@
                 </li>
             {% endif %}
 
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                    <li class="page-item active">
-                        <span class="page-link rounded-3 border-0 shadow-sm fw-semibold">{{ num }}</span>
-                    </li>
+            {% with total=page_obj.paginator.num_pages current=page_obj.number %}
+                {% if total <= 7 %}
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link rounded-3 border-0 shadow-sm fw-semibold">{{ num }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link rounded-3 border-0 shadow-sm" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
                 {% else %}
-                    <li class="page-item">
-                        <a class="page-link rounded-3 border-0 shadow-sm" href="?page={{ num }}">{{ num }}</a>
-                    </li>
+                    {% if current > 3 %}
+                        <li class="page-item">
+                            <a class="page-link rounded-3 border-0 shadow-sm" href="?page=1">1</a>
+                        </li>
+                    {% endif %}
+
+                    {% if current > 4 %}
+                        <li class="page-item disabled">
+                            <span class="page-link rounded-3 border-0">&hellip;</span>
+                        </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if num >= current|add:"-2" and num <= current|add:"2" %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link rounded-3 border-0 shadow-sm fw-semibold">{{ num }}</span>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link rounded-3 border-0 shadow-sm" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if current < total|add:"-3" %}
+                        <li class="page-item disabled">
+                            <span class="page-link rounded-3 border-0">&hellip;</span>
+                        </li>
+                    {% endif %}
+
+                    {% if current < total|add:"-2" %}
+                        <li class="page-item">
+                            <a class="page-link rounded-3 border-0 shadow-sm" href="?page={{ total }}">{{ total }}</a>
+                        </li>
+                    {% endif %}
                 {% endif %}
-            {% endfor %}
+            {% endwith %}
 
             {% if page_obj.has_next %}
                 <li class="page-item">
