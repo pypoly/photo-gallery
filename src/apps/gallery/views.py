@@ -1,7 +1,6 @@
 import os
 
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
@@ -9,7 +8,7 @@ from django.http import HttpResponse, HttpRequest, Http404
 from django.urls import reverse
 from django.views.generic import ListView, UpdateView, DetailView, CreateView, DeleteView
 
-from apps.gallery.forms import UpdatePhotoForm, PhotoCreateForm, AlbumCreateForm, AlbumUpdateForm
+from apps.gallery.forms import UpdatePhotoForm, PhotoCreateForm, AlbumCreateForm, AlbumUpdateForm, PhotoFilterForm, UserRegisterForm
 from apps.gallery.models import Photo, Album
 from .tasks import create_thumbnail
 # список фото
@@ -17,9 +16,31 @@ from .tasks import create_thumbnail
 class PhotoListView(LoginRequiredMixin, ListView):
     model = Photo
     template_name = 'gallery/photo_list.html'
+    paginate_by = 18
+
 
     def get_queryset(self):
-        return Photo.objects.filter(user=self.request.user)
+        qs = Photo.objects.filter(user=self.request.user)
+        # Создание формы фильтрации
+        self.filter_form = PhotoFilterForm(data=self.request.GET)
+        if self.filter_form.is_valid():
+            from_date = self.filter_form.cleaned_data.get('from_date')
+            to_date = self.filter_form.cleaned_data.get('to_date')
+            if from_date:
+                qs = qs.filter(created_at__gte=from_date)
+            if to_date:
+                qs = qs.filter(created_at__lte=to_date)
+        return qs
+
+    def get_context_data(self, *args, **kwargs):
+        """
+        Добавляем форму фильтрации в контекст
+        """
+        ctx = super().get_context_data(*args, **kwargs)
+        ctx['filter_form'] = self.filter_form
+        from pprint import pprint
+        pprint(ctx)
+        return ctx
 
 # детали одного фото
 class PhotoDetailView(LoginRequiredMixin, DetailView):
@@ -96,6 +117,7 @@ class AlbumListView(LoginRequiredMixin, ListView):
     model = Album
     template_name = 'gallery/album_list.html'
     queryset = Album.objects.filter(private=False)
+    paginate_by = 8
 
     def get_queryset(self):
         return Album.objects.filter(user=self.request.user)
@@ -105,11 +127,17 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
     form_class = AlbumCreateForm
     template_name = 'gallery/album_create.html'
 
+    def post(self, request, *args, **kwargs):
+        resp = super().post(request, *args, **kwargs)
+        print('POST')
+        return resp
+
     def get_success_url(self):
         return reverse('gallery:album_list')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        print('SAVE ALBUM')
         return super().form_valid(form)
 
     # def get(self, request, *args, **kwargs):
@@ -134,6 +162,7 @@ class AlbumUpdateView(LoginRequiredMixin, UpdateView):
     model = Album
     form_class = AlbumUpdateForm
     template_name = 'gallery/album_update.html'
+    success_url = '/'
 
     def get(self, request, *args, **kwargs):
         photo = self.get_object()
@@ -155,13 +184,13 @@ class AlbumDeleteView(LoginRequiredMixin, DeleteView):
 # ============================================================================
 class UserRegisterView(CreateView):
     model = User
-    form_class = UserCreationForm
+    form_class = UserRegisterForm
     template_name = 'gallery/registration.html'
     success_url = '/'
 
     def get(self, request: HttpRequest, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect('gallery')
+            return redirect('gallery:index')
         return super().get(request, *args, **kwargs)
 
 class UserProfileView(LoginRequiredMixin, DetailView):

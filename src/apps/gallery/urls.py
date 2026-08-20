@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 from apps import gallery
 from apps.gallery.views import PhotoListView, PhotoCreateView, PhotoUpdateView, PhotoDeleteView, PhotoDetailView, \
@@ -7,7 +7,7 @@ from apps.gallery.views import PhotoListView, PhotoCreateView, PhotoUpdateView, 
 
 app_name = 'gallery'
 urlpatterns = [
-    path('', PhotoListView.as_view(), name = 'gallery'),
+    path('', PhotoListView.as_view(), name ='index'),
     path('photo', PhotoCreateView.as_view(), name = 'add_photo'),
     path('photo/edit/<int:pk>', PhotoUpdateView.as_view(), name = 'update_photo'),
     path('photo/delete/<int:pk>', PhotoDeleteView.as_view(), name = 'delete_photo'),

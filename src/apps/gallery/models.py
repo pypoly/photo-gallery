@@ -29,7 +29,7 @@ class Photo(models.Model):
     thumbnail = models.ImageField(upload_to=get_upload_thumbnail_path, null=True, blank=True)
     created_at = models.DateTimeField(null=True, blank=True)
     uploaded_at = models.DateTimeField(auto_now=True, null=True, blank=True)
-    album = models.ForeignKey('gallery.Album', on_delete=models.RESTRICT, null=True, blank=True)
+    album = models.ForeignKey('gallery.Album', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.image.name
@@ -50,7 +50,7 @@ class Album(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     private = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    thumbnail = models.ImageField(upload_to=get_album_path, null=True)
+    thumbnail = models.ImageField(upload_to=get_album_path, null=True, blank=True)
 
     def __str__(self):
         return self.name
