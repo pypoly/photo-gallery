@@ -21,7 +21,7 @@
 
 <nav class="navbar navbar-expand-lg bg-body border-bottom shadow-sm">
     <div class="container-fluid px-4">
-        <a class="navbar-brand d-flex align-items-center gap-2 fw-semibold" href="{% url 'gallery' %}">
+        <a class="navbar-brand d-flex align-items-center gap-2 fw-semibold" href="{% url 'gallery:gallery' %}">
             <i class="bi bi-images text-primary fs-3"></i>
             <span>Фотогалерея</span>
         </a>
@@ -34,26 +34,26 @@
         <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'gallery' %}">
+                    <a class="nav-link active" href="{% url 'gallery:gallery' %}">
                         <i class="bi bi-collection"></i> Фото
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'album_list' %}" class="nav-link">
+                    <a href="{% url 'gallery:album_list' %}" class="nav-link">
                         <i class="bi bi-image"></i> Альбомы
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'add_photo' %}">
+                    <a class="nav-link" href="{% url 'gallery:add_photo' %}">
                         <i class="bi bi-upload"></i> Загрузить
                     </a>
                 </li>
             </ul>
 
             <div class="d-flex align-items-center gap-1">
-                <button class="btn border-0 rounded-circle p-2 text-body-secondary" type="button" title="Поиск">
-                    <i class="bi bi-search"></i>
-                </button>
+{#                <button class="btn border-0 rounded-circle p-2 text-body-secondary" type="button" title="Поиск">#}
+{#                    <i class="bi bi-search"></i>#}
+{#                </button>#}
 
                 <button class="btn border-0 rounded-circle p-2 text-body-secondary" type="button"
                         id="themeToggle" title="Переключить тему">
@@ -71,9 +71,12 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><span class="dropdown-item-text small text-muted">{{ user.email }}</span></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/admin/"><i class="bi bi-gear"></i> Настройки</a></li>
+                            <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="bi bi-gear"></i> Настройки</a></li>
+                            {% if user.is_superuser %}
+                                <li><a class="dropdown-item" href="{% url 'admin:index' %}"><i class="bi bi-person"></i> Админка</a></li>
+                            {% endif %}
                             <li>
-                                <form method="post" action="{% url 'admin:logout' %}">
+                                <form method="post" action="{% url 'logout' %}">
                                     {% csrf_token %}
                                     <button type="submit" class="dropdown-item">
                                         <i class="bi bi-box-arrow-right"></i> Выйти
@@ -83,7 +86,7 @@
                         </ul>
                     </div>
                 {% else %}
-                    <a class="btn btn-primary rounded-pill px-4 ms-1" href="/admin/login/">Войти</a>
+                    <a class="btn btn-primary rounded-pill px-4 ms-1" href="{% url 'login' %}">Войти</a>
                 {% endif %}
             </div>
         </div>
