@@ -31,6 +31,12 @@ class Photo(models.Model):
     uploaded_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     album = models.ForeignKey('gallery.Album', on_delete=models.RESTRICT, null=True, blank=True)
 
+    def __str__(self):
+        return self.image.name
+
+    class Meta:
+        verbose_name_plural = "Фото"
+
 def get_album_path(instance, filename):
     base, ext = os.path.splitext(filename)
     return os.path.join(
@@ -49,7 +55,8 @@ class Album(models.Model):
     def __str__(self):
         return self.name
 
-
+    class Meta:
+        verbose_name_plural = "Альбомы"
 
 
 
