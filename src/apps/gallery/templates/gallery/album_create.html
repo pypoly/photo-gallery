@@ -15,7 +15,7 @@
                 <div class="card-body p-4">
                     <form action="{% url 'gallery:add_album'%}" method="POST" enctype="multipart/form-data" novalidate>
                         {% csrf_token %}
-
+                        >>{{ form.non_field_errors }}
                         {% if form.non_field_errors %}
                             <div class="alert alert-danger">{{ form.non_field_errors }}</div>
                         {% endif %}

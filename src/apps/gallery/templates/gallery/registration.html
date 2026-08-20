@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-5">
+        <div class="col-md-4 col-lg-4">
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-body p-4 p-sm-5">
 
@@ -27,49 +27,52 @@
 
                         <div class="mb-3">
                             <label class="form-label mb-1">
-                                <i class="bi bi-user me-1"></i>{{ form.username.label }}{% if form.username.field.required %} *{% endif %}
+                                <i class="bi bi-person me-1"></i>{{ form.username.label }}{% if form.username.field.required %} *{% endif %}
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                {{ form.username.as_widget(attrs={'class':'form-control','placeholder':'Введите имя пользователя'}) }}
+                                {{ form.username }}
                             </div>
                             {% if form.username.errors %}
                                 <div class="invalid-feedback d-block mt-1">{{ form.username.errors }}</div>
-                            {% endif %}
-                            {% if form.username.help_text %}
-                                <div class="form-text mt-1">{{ form.username.help_text }}</div>
+                            {% else %}
+                                {% if form.username.help_text %}
+                                    <div class="form-text mt-1">{{ form.username.help_text }}</div>
+                                {% endif %}
                             {% endif %}
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label mb-1">
-                                <i class="bi bi-lock me-1"></i>{{ form.password1.label }}{% if form.password1.field.required %} *{% endif %}
+                                <i class="bi bi-key me-1"></i>{{ form.password1.label }}{% if form.password1.field.required %} *{% endif %}
                             </label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                {{ form.password1.as_widget(attrs={'class':'form-control','placeholder':'Введите пароль'}) }}
+                                <span class="input-group-text"><i class="bi bi-shield-plus"></i></span>
+                                {{ form.password1 }}
                             </div>
                             {% if form.password1.errors %}
                                 <div class="invalid-feedback d-block mt-1">{{ form.password1.errors }}</div>
-                            {% endif %}
-                            {% if form.password1.help_text %}
-                                <div class="form-text mt-1">{{ form.password1.help_text }}</div>
+                            {% else %}
+                                {% if form.password1.help_text %}
+                                    <div class="form-text mt-1">{{ form.password1.help_text }}</div>
+                                {% endif %}
                             {% endif %}
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label mb-1">
-                                <i class="bi bi-lock-fill me-1"></i>{{ form.password2.label }}{% if form.password2.field.required %} *{% endif %}
+                                <i class="bi bi-key me-1"></i>{{ form.password2.label }}{% if form.password2.field.required %} *{% endif %}
                             </label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                                {{ form.password2.as_widget(attrs={'class':'form-control','placeholder':'Повторите пароль'}) }}
+                                <span class="input-group-text"><i class="bi bi-check2-circle"></i></span>
+                                {{ form.password2 }}
                             </div>
                             {% if form.password2.errors %}
                                 <div class="invalid-feedback d-block mt-1">{{ form.password2.errors }}</div>
-                            {% endif %}
-                            {% if form.password2.help_text %}
-                                <div class="form-text mt-1">{{ form.password2.help_text }}</div>
+                            {% else %}
+                                {% if form.password2.help_text %}
+                                    <div class="form-text mt-1">{{ form.password2.help_text }}</div>
+                                {% endif %}
                             {% endif %}
                         </div>
 

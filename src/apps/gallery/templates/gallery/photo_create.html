@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="d-flex align-items-center gap-2 mb-3">
-        <a href="{% url 'gallery:gallery' %}" class="btn btn-outline-secondary rounded-pill">
+        <a href="{% url 'gallery:index' %}" class="btn btn-outline-secondary rounded-pill">
             <i class="bi bi-arrow-left"></i> Назад
         </a>
         <h1 class="h4 mb-0">Загрузить фото</h1>
@@ -25,15 +25,18 @@
                                 <i class="bi bi-image me-1"></i>Фото
                             </label>
 
-                            <div class="rounded-4 overflow-hidden bg-body-secondary mb-3">
-                                <div class="ratio ratio-4x3">
-                                    <div class="d-flex align-items-center justify-content-center" id="photoPreview">
-                                        <i class="bi bi-cloud-arrow-up text-secondary" style="font-size: 3rem;"></i>
+                            <div class="d-flex justify-content-center mb-3">
+                                <div class="rounded-4 overflow-hidden bg-body-secondary position-relative"
+                                     style="width: 400px; height: 300px; cursor: pointer;"
+                                     id="photoPreviewWrapper">
+                                    <div class="d-flex align-items-center justify-content-center w-100 h-100" id="photoPreview">
+                                        <i class="bi bi-cloud-arrow-up text-secondary" style="font-size: 2rem;"></i>
                                     </div>
+                                    <input type="file" name="{{ form.image.html_name }}" id="{{ form.image.id_for_label }}"
+                                           accept="image/*"
+                                           style="position: absolute; inset: 0; opacity: 0; cursor: pointer;">
                                 </div>
                             </div>
-
-                            {{ form.image }}
                             {% if form.image.errors %}
                                 <div class="invalid-feedback d-block">{{ form.image.errors }}</div>
                             {% endif %}
@@ -51,7 +54,7 @@
                         </div>
 
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="{% url 'gallery:gallery' %}" class="btn btn-outline-secondary rounded-pill px-4">Отмена</a>
+                            <a href="{% url 'gallery:index' %}" class="btn btn-outline-secondary rounded-pill px-4">Отмена</a>
                             <button type="submit" class="btn btn-primary rounded-pill px-4">
                                 <i class="bi bi-check-lg"></i> Загрузить
                             </button>
@@ -68,13 +71,14 @@
         (function () {
             const input = document.getElementById('{{ form.image.id_for_label }}');
             const preview = document.getElementById('photoPreview');
+            const wrapper = document.getElementById('photoPreviewWrapper');
             input.addEventListener('change', function () {
                 const file = input.files && input.files[0];
                 if (!file) return;
                 preview.innerHTML = '';
                 const img = document.createElement('img');
                 img.src = URL.createObjectURL(file);
-                img.className = 'w-100 h-100 object-fit-cover';
+                img.className = 'w-100 h-100 object-fit-contain';
                 preview.appendChild(img);
             });
         })();

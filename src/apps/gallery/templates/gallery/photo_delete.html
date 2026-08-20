@@ -4,10 +4,10 @@
 
 {% block content %}
     <h1>Удалить фото</h1>
-    <p>Are you sure you want to delete "<strong>{{ object.title }}</strong>"?</p>
+    <p>Вы уверены, что хотите удалить фото?<strong>{{ object.title }}</strong></p>
     <form action="{% url 'gallery:delete_photo' pk=object.pk %}" method="POST">
     {% csrf_token %}
-    <button class="btn btn-danger" type="submit">Delete</button>
-    <a class="btn btn-secondary" href="{% url 'gallery:gallery' %}">Cancel</a>
+    <button class="btn btn-danger" type="submit">Удалить</button>
+    <a class="btn btn-secondary" href="{% url 'gallery:photo' pk=object.pk %}">Нет</a>
     </form>
 {% endblock %}
