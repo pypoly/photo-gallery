@@ -26,7 +26,7 @@ class PhotoCreateForm(forms.ModelForm):
 class UpdatePhotoForm(forms.ModelForm):
     class Meta:
         model = Photo
-        fields = ('thumbnail', 'created_at', 'image')
+        fields = ('thumbnail', 'created_at', 'image', 'album')
         widgets = {
             'created_at': forms.DateTimeInput(
                 attrs={'placeholder': 'ДД.ММ.ГГГГ ЧЧ:ММ'},
@@ -99,3 +99,4 @@ class PhotoFilterForm(Form):
             format='%Y-%m-%dT%H:%M',
         ),
     )
+

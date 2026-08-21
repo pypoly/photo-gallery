@@ -56,7 +56,15 @@
                                 <div class="invalid-feedback d-block">{{ form.created_at.errors }}</div>
                             {% endif %}
                         </div>
-
+                        {% if not photo.album %}
+                              <label for="{{ form.album.id_for_label }}" class="form-label">
+                                <i class="bi bi-folder me-1"></i>Добавить в альбом
+                            </label>
+                            {{ form.album }}
+                            {% if form.album.errors %}
+                                <div class="invalid-feedback d-block">{{ form.album.errors }}</div>
+                            {% endif %}
+                        {% endif %}
                         <div class="d-flex justify-content-end gap-2">
                             <a href="{% url 'gallery:photo' object.pk %}" class="btn btn-outline-secondary rounded-pill px-4">Отмена</a>
                             <button type="submit" class="btn btn-primary rounded-pill px-4">
