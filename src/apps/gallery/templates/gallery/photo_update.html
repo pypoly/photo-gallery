@@ -3,45 +3,72 @@
 
 {% block extra_head %}
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <style>
+        .thumb-overlay {
+            background: rgba(0, 0, 0, .45);
+            opacity: 0;
+            transition: opacity .15s ease-in-out;
+        }
+        .thumb-editable:hover .thumb-overlay,
+        .thumb-editable:focus-within .thumb-overlay { opacity: 1; }
+        .thumb-editable { transition: box-shadow .15s ease-in-out; }
+        .thumb-editable:hover { box-shadow: var(--bs-box-shadow) !important; }
+    </style>
 {% endblock %}
 
 {% block content %}
-    <div class="d-flex align-items-center gap-2 mb-3">
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
         <a href="{% url 'gallery:photo' object.pk %}" class="btn btn-outline-secondary rounded-pill">
-            <i class="bi bi-arrow-left"></i> Назад
+            <i class="bi bi-arrow-left"></i> Назад к фото
         </a>
         <h1 class="h4 mb-0">Редактирование фото</h1>
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
+        <div class="col-md-8 col-lg-6 col-xl-5">
             <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body p-4">
-                    {% if object.thumbnail %}
-                        <div class="text-center mb-4">
-                            <img src="{{ object.thumbnail.url }}" alt="Превью"
-                                 class="rounded-3 shadow-sm object-fit-cover" style="width: 160px; height: 160px;">
-                        </div>
-                    {% endif %}
-
-                    <form action="{% url 'gallery:update_photo' pk=object.id %}" method="POST" enctype="multipart/form-data" novalidate>
+                <div class="card-body p-4 p-md-5">
+                    <form action="{% url 'gallery:update_photo' pk=object.id %}" method="POST"
+                          enctype="multipart/form-data" novalidate>
                         {% csrf_token %}
 
                         {% if form.non_field_errors %}
-                            <div class="alert alert-danger">
-                                {{ form.non_field_errors }}
-                            </div>
+                            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
                         {% endif %}
 
-                        <div class="mb-3">
-                            <label for="{{ form.thumbnail.id_for_label }}" class="form-label">
+                        <div class="mb-4">
+                            <span class="form-label d-block mb-2">
                                 <i class="bi bi-image me-1"></i>Превью
-                            </label>
-                            {{ form.thumbnail }}
+                            </span>
+                            <div class="d-flex justify-content-center">
+                                <div id="thumbWrapper"
+                                     class="thumb-editable position-relative rounded-4 overflow-hidden bg-body-secondary shadow-sm"
+                                     style="width: 240px; height: 240px; cursor: pointer;"
+                                     role="button" tabindex="0" aria-label="Изменить превью"
+                                     title="Нажмите, чтобы изменить превью">
+                                    <div id="thumbPreview" class="w-100 h-100">
+                                        {% if object.thumbnail %}
+                                            <img src="{{ object.thumbnail.url }}" alt="Превью"
+                                                 class="w-100 h-100 object-fit-cover">
+                                        {% else %}
+                                            <div class="d-flex flex-column align-items-center justify-content-center w-100 h-100 gap-2 text-body-secondary">
+                                                <i class="bi bi-plus-lg" style="font-size: 2rem;"></i>
+                                                <span class="small">Добавить превью</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="thumb-overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center gap-1 text-white">
+                                        <i class="bi bi-camera-fill fs-4"></i>
+                                        <span class="small fw-semibold">{% if object.thumbnail %}Заменить{% else %}Выбрать{% endif %}</span>
+                                    </div>
+                                </div>
+                                <input type="file" name="{{ form.thumbnail.html_name }}"
+                                       id="{{ form.thumbnail.id_for_label }}" accept="image/*" class="d-none">
+                            </div>
                             {% if form.thumbnail.errors %}
-                                <div class="invalid-feedback d-block">{{ form.thumbnail.errors }}</div>
+                                <div class="invalid-feedback d-block text-center">{{ form.thumbnail.errors }}</div>
                             {% endif %}
-                            <div class="form-text">Оставьте пустым, если не нужно менять превью.</div>
+                            <div class="form-text text-center mt-2">Нажмите на изображение, чтобы заменить превью.</div>
                         </div>
 
                         <div class="mb-4">
@@ -49,26 +76,35 @@
                                 <i class="bi bi-calendar-event me-1"></i>Дата съёмки
                             </label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                <span class="input-group-text bg-body-secondary"><i class="bi bi-calendar3"></i></span>
                                 {{ form.created_at }}
                             </div>
                             {% if form.created_at.errors %}
                                 <div class="invalid-feedback d-block">{{ form.created_at.errors }}</div>
                             {% endif %}
+                            <div class="form-text">Необязательно — можно оставить пустым.</div>
                         </div>
-                        {% if not photo.album %}
-                              <label for="{{ form.album.id_for_label }}" class="form-label">
-                                <i class="bi bi-folder me-1"></i>Добавить в альбом
-                            </label>
-                            {{ form.album }}
-                            {% if form.album.errors %}
-                                <div class="invalid-feedback d-block">{{ form.album.errors }}</div>
-                            {% endif %}
+
+                        {% if not object.album %}
+                            <div class="mb-4">
+                                <label for="{{ form.album.id_for_label }}" class="form-label">
+                                    <i class="bi bi-folder me-1"></i>Добавить в альбом
+                                </label>
+                                {{ form.album }}
+                                {% if form.album.errors %}
+                                    <div class="invalid-feedback d-block">{{ form.album.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">Фото без альбома не появится в подборках.</div>
+                            </div>
                         {% endif %}
-                        <div class="d-flex justify-content-end gap-2">
-                            <a href="{% url 'gallery:photo' object.pk %}" class="btn btn-outline-secondary rounded-pill px-4">Отмена</a>
+
+                        <div class="d-flex align-items-center justify-content-between gap-2 pt-3 mt-4 border-top">
+                            <a href="{% url 'gallery:photo' object.pk %}"
+                               class="btn btn-link text-body-secondary text-decoration-none px-3">
+                                <i class="bi bi-x-lg me-1"></i>Отмена
+                            </a>
                             <button type="submit" class="btn btn-primary rounded-pill px-4">
-                                <i class="bi bi-check-lg"></i> Сохранить
+                                <i class="bi bi-check-lg"></i> Сохранить изменения
                             </button>
                         </div>
                     </form>
@@ -89,5 +125,28 @@
             allowInput: true,
             locale: flatpickr.l10ns.ru
         });
+
+        (function () {
+            const wrapper = document.getElementById('thumbWrapper');
+            const input = document.getElementById('{{ form.thumbnail.id_for_label }}');
+            const preview = document.getElementById('thumbPreview');
+
+            wrapper.addEventListener('click', function () { input.click(); });
+            wrapper.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    input.click();
+                }
+            });
+            input.addEventListener('change', function () {
+                const file = input.files && input.files[0];
+                if (!file) return;
+                preview.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.className = 'w-100 h-100 object-fit-cover';
+                preview.appendChild(img);
+            });
+        })();
     </script>
 {% endblock %}

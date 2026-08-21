@@ -29,9 +29,10 @@ class UpdatePhotoForm(forms.ModelForm):
         fields = ('thumbnail', 'created_at', 'image', 'album')
         widgets = {
             'created_at': forms.DateTimeInput(
-                attrs={'placeholder': 'ДД.ММ.ГГГГ ЧЧ:ММ'},
+                attrs={'class': 'form-control rounded-end-3', 'placeholder': 'ДД.ММ.ГГГГ ЧЧ:ММ'},
                 format='%Y-%m-%d %H:%M',
             ),
+            'album': forms.Select(attrs={'class': 'form-select rounded-3'}),
         }
 
 
