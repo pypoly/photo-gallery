@@ -38,8 +38,6 @@ class PhotoListView(LoginRequiredMixin, ListView):
         """
         ctx = super().get_context_data(*args, **kwargs)
         ctx['filter_form'] = self.filter_form
-        from pprint import pprint
-        pprint(ctx)
         return ctx
 
 # детали одного фото
@@ -176,9 +174,11 @@ class AlbumDeleteView(LoginRequiredMixin, DeleteView):
     success_url = '/'
 
     def post(self, request, *args, **kwargs):
-        path = self.get_object().image.path
-        if os.path.exists(path):
-            os.unlink(path)
+        obj = self.get_object()
+        if obj.thumbnail:
+            path = obj.thumbnail.path
+            if os.path.exists(path):
+                os.unlink(path)
         return super().post(request, *args, **kwargs)
 
 # ============================================================================
