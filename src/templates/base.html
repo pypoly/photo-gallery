@@ -35,23 +35,27 @@
         </button>
 
         <div class="collapse navbar-collapse" id="mainNavbar">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'gallery:index' %}">
-                        <i class="bi bi-collection"></i> Фото
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'gallery:album_list' %}" class="nav-link">
-                        <i class="bi bi-image"></i> Альбомы
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'gallery:add_photo' %}">
-                        <i class="bi bi-upload"></i> Загрузить
-                    </a>
-                </li>
-            </ul>
+            {% with url_name=request.resolver_match.url_name %}
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {% if url_name == 'index' or url_name == 'photo' or url_name == 'update_photo' or url_name == 'delete_photo' %}active fw-bold{% endif %}"
+                           href="{% url 'gallery:index' %}">
+                            <i class="bi bi-collection"></i> Фото
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'gallery:album_list' %}"
+                           class="nav-link {% if url_name == 'album_list' or url_name == 'detail_album' or url_name == 'add_album' or url_name == 'update_album' or url_name == 'delete_album' %}active fw-bold{% endif %}">
+                            <i class="bi bi-image"></i> Альбомы
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if url_name == 'add_photo' %}active fw-bold{% endif %}" href="{% url 'gallery:add_photo' %}">
+                            <i class="bi bi-upload"></i> Загрузить
+                        </a>
+                    </li>
+                </ul>
+            {% endwith %}
 
             <div class="d-flex align-items-center gap-1">
 {#                <button class="btn border-0 rounded-circle p-2 text-body-secondary" type="button" title="Поиск">#}
