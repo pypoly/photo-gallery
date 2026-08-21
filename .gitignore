@@ -10,3 +10,4 @@ _temp/
 data/
 .idea/
 *sqlite3
+*override*
