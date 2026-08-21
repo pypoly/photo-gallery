@@ -10,7 +10,6 @@ services:
 #      - .env
     volumes:
       - ./data:/app/data
-#      - ./src:/app
     environment:
       REDIS_HOST: redis
     networks:
