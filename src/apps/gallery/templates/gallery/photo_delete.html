@@ -1,13 +1,37 @@
 {% extends 'base.html' %}
-
-{% block title %}Delete Post{% endblock %}
+{% block title %}Удаление фото — Фотогалерея{% endblock %}
 
 {% block content %}
-    <h1>Удалить фото</h1>
-    <p>Вы уверены, что хотите удалить фото?<strong>{{ object.title }}</strong></p>
-    <form action="{% url 'gallery:delete_photo' pk=object.pk %}" method="POST">
-    {% csrf_token %}
-    <button class="btn btn-danger" type="submit">Удалить</button>
-    <a class="btn btn-secondary" href="{% url 'gallery:photo' pk=object.pk %}">Нет</a>
-    </form>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4 text-center">
+                    <div class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle bg-danger-subtle"
+                         style="width: 72px; height: 72px;">
+                        <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 2rem;"></i>
+                    </div>
+
+                    <h1 class="h5 mb-3">Удалить это фото?</h1>
+
+                    {% if object.thumbnail %}
+                        <img src="{{ object.thumbnail.url }}" alt="Фото {{ object.pk }}"
+                             class="rounded-3 shadow-sm object-fit-cover mb-3"
+                             style="width: 160px; height: 160px;">
+                    {% endif %}
+
+                    <p class="text-body-secondary mb-4">Фото и его файл будут удалены безвозвратно.</p>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                            <a href="{% url 'gallery:photo' object.pk %}" class="btn btn-outline-secondary rounded-pill px-4">Отмена</a>
+                            <button type="submit" class="btn btn-danger rounded-pill px-4">
+                                <i class="bi bi-trash"></i> Удалить
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

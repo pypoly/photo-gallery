@@ -2,24 +2,24 @@
 {% block title %}Альбомы — Фотогалерея{% endblock %}
 
 {% block content %}
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center gap-2 mb-3 mb-sm-4">
         <h1 class="h4 mb-0">
             <i class="bi bi-folder2-open text-primary me-2"></i>Альбомы
         </h1>
-        <a href="{% url 'gallery:add_album' %}" class="btn btn-primary rounded-pill">
-            <i class="bi bi-plus-lg"></i> Создать
+        <a href="{% url 'gallery:add_album' %}" class="btn btn-primary rounded-pill text-nowrap">
+            <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline"> Создать</span>
         </a>
     </div>
 
     {% if object_list %}
-        <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+        <div class="row g-3 g-sm-4 row-cols-2 row-cols-md-3 row-cols-lg-4">
             {% for album in object_list %}
                 <div class="col">
                     <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
                         <a href="{% url 'gallery:detail_album' album.pk %}" class="d-block ratio ratio-16x9 bg-body-secondary text-decoration-none">
                             {% if album.thumbnail %}
                                 <img src="{{ album.thumbnail.url }}" alt="{{ album.name }}"
-                                     class="w-100 h-100 object-fit-cover">
+                                     class="w-100 h-100 object-fit-cover" loading="lazy" decoding="async">
                             {% else %}
                                 <div class="d-flex align-items-center justify-content-center h-100">
                                     <i class="bi bi-collection text-secondary" style="font-size: 3rem;"></i>
@@ -44,7 +44,7 @@
                         <div class="card-footer bg-transparent border-0 pt-0">
                             <div class="d-flex justify-content-between align-items-center text-body-secondary small">
                                 <span>
-                                    <i class="bi bi-images me-1"></i>{{ album.photo_set.count }}
+                                    <i class="bi bi-images me-1"></i>{{ album.photos.count }}
                                 </span>
                                 <span>
                                     <i class="bi bi-calendar3 me-1"></i>{{ album.created_at|date:'d.m.Y' }}

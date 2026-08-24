@@ -36,6 +36,7 @@ class Photo(models.Model):
 
     class Meta:
         verbose_name_plural = "Фото"
+        ordering = ['-uploaded_at']
 
 def get_album_path(instance, filename):
     base, ext = os.path.splitext(filename)
@@ -57,6 +58,7 @@ class Album(models.Model):
 
     class Meta:
         verbose_name_plural = "Альбомы"
+        ordering = ['-created_at']
 
 
 

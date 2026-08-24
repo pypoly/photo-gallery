@@ -3,23 +3,25 @@
 
 {% block content %}
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-    {% if photo.album %}
-    	   <a href="{% url 'gallery:detail_album' pk=object.album.pk %}" class="btn btn-outline-secondary rounded-pill">
+    {% if object.album %}
+        <a href="{% url 'gallery:detail_album' pk=object.album.pk %}" class="btn btn-outline-secondary rounded-pill">
             <i class="bi bi-arrow-left"></i> Назад к альбому
-        {% else %}
-              <a href="{% url 'gallery:index' %}" class="btn btn-outline-secondary rounded-pill">
-            <i class="bi bi-arrow-left"></i> Назад в галерею
-    {% endif %}
-
         </a>
-        <div class="d-flex gap-2">
-            <a href="{% url 'gallery:update_photo' object.pk %}" class="text-body-secondary text-decoration-none"
+    {% else %}
+        <a href="{% url 'gallery:index' %}" class="btn btn-outline-secondary rounded-pill">
+            <i class="bi bi-arrow-left"></i> Назад в галерею
+        </a>
+    {% endif %}
+        <div class="d-flex gap-1">
+            <a href="{% url 'gallery:update_photo' object.pk %}"
+               class="btn btn-link text-body-secondary text-decoration-none fs-5 lh-1 p-2 rounded-circle hover-bg-secondary"
                title="Редактировать">
-                <i class="bi bi-pencil" style="font-size: 1.5rem;"></i>
+                <i class="bi bi-pencil"></i>
             </a>
-            <a href="{% url 'gallery:delete_photo' object.pk %}" class="text-danger text-decoration-none"
+            <a href="{% url 'gallery:delete_photo' object.pk %}"
+               class="btn btn-link text-danger-emphasis text-decoration-none fs-5 lh-1 p-2 rounded-circle hover-bg-danger-subtle"
                title="Удалить">
-                <i class="bi bi-trash" style="font-size: 1.5rem;"></i>
+                <i class="bi bi-trash"></i>
             </a>
         </div>
     </div>
@@ -108,7 +110,7 @@
                 <div class="modal-body d-flex align-items-center justify-content-center p-0">
                     <img src="{{ object.image.url }}" alt="Фото {{ object.pk }}" class="img-fluid">
                 </div>
-                <div class="modal-footer border-0 d-flex justify-content-between">
+                <div class="modal-footer border-0 d-flex flex-wrap justify-content-between gap-2">
                     <span class="text-body-secondary small">Фото {{ object.pk }} &mdash; {{ object.uploaded_at|date:'d.m.Y H:i' }}</span>
                     <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Закрыть</button>
                 </div>

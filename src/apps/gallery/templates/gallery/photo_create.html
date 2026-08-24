@@ -26,8 +26,8 @@
                             </label>
 
                             <div class="d-flex justify-content-center mb-3">
-                                <div class="rounded-4 overflow-hidden bg-body-secondary position-relative"
-                                     style="width: 400px; height: 300px; cursor: pointer;"
+                                <div class="rounded-4 overflow-hidden bg-body-secondary position-relative w-100"
+                                     style="max-width: 400px; aspect-ratio: 4 / 3; cursor: pointer;"
                                      id="photoPreviewWrapper">
                                     <div class="d-flex align-items-center justify-content-center w-100 h-100" id="photoPreview">
                                         <i class="bi bi-cloud-arrow-up text-secondary" style="font-size: 2rem;"></i>
@@ -53,7 +53,7 @@
                             <div class="form-text">Фото нужно обязательно привязать к альбому.</div>
                         </div>
 
-                        <div class="d-flex justify-content-end gap-2">
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
                             <a href="{% url 'gallery:index' %}" class="btn btn-outline-secondary rounded-pill px-4">Отмена</a>
                             <button type="submit" class="btn btn-primary rounded-pill px-4">
                                 <i class="bi bi-check-lg"></i> Загрузить

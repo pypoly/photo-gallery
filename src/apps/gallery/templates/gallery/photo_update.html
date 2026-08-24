@@ -42,8 +42,8 @@
                             </span>
                             <div class="d-flex justify-content-center">
                                 <div id="thumbWrapper"
-                                     class="thumb-editable position-relative rounded-4 overflow-hidden bg-body-secondary shadow-sm"
-                                     style="width: 240px; height: 240px; cursor: pointer;"
+                                     class="thumb-editable position-relative rounded-4 overflow-hidden bg-body-secondary shadow-sm w-100"
+                                     style="max-width: 240px; aspect-ratio: 1 / 1; cursor: pointer;"
                                      role="button" tabindex="0" aria-label="Изменить превью"
                                      title="Нажмите, чтобы изменить превью">
                                     <div id="thumbPreview" class="w-100 h-100">
@@ -98,9 +98,9 @@
                             </div>
                         {% endif %}
 
-                        <div class="d-flex align-items-center justify-content-between gap-2 pt-3 mt-4 border-top">
+                        <div class="d-grid gap-2 d-sm-flex align-items-center justify-content-sm-between pt-3 mt-4 border-top">
                             <a href="{% url 'gallery:photo' object.pk %}"
-                               class="btn btn-link text-body-secondary text-decoration-none px-3">
+                               class="btn btn-link text-body-secondary text-decoration-none px-0 px-sm-3">
                                 <i class="bi bi-x-lg me-1"></i>Отмена
                             </a>
                             <button type="submit" class="btn btn-primary rounded-pill px-4">
