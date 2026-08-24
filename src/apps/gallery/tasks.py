@@ -48,9 +48,7 @@ def process_file(path: str) -> tuple[str, str]:
 
 def to_jpg(path):
     img = Image.open(path)
-    transposed = ImageOps.exif_transpose(img)
-    if transposed is not None:
-        img = transposed
+    img = ImageOps.exif_transpose(img) or img
     name, ext = os.path.splitext(path)
     if ext.strip('.').lower() != 'jpg':
         img = img.convert('RGB')
