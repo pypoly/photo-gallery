@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from io import BytesIO
 
-from PIL import Image
+from PIL import Image, ImageOps
 from django.core.files.base import ContentFile
 
 from apps.gallery.models import Photo
@@ -48,6 +48,9 @@ def process_file(path: str) -> tuple[str, str]:
 
 def to_jpg(path):
     img = Image.open(path)
+    transposed = ImageOps.exif_transpose(img)
+    if transposed is not None:
+        img = transposed
     name, ext = os.path.splitext(path)
     if ext.strip('.').lower() != 'jpg':
         img = img.convert('RGB')
