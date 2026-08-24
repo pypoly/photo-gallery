@@ -5,7 +5,6 @@ from io import BytesIO
 from PIL import Image
 from django.core.files.base import ContentFile
 
-from apps.gallery.forms import UpdatePhotoForm
 from apps.gallery.models import Photo
 from main.celery import app
 
@@ -25,24 +24,20 @@ def create_thumbnail(photo_id: int):
     thumbnail.thumbnail((250, 250), Image.Resampling.LANCZOS)
     creation_date = get_creation_date(image_path)
 
-    data = {}
-    if creation_date:
-        data['created_at'] = creation_date
     file_base_name = os.path.splitext(os.path.basename(image_path))[0]
-    files = {
-        'image': to_content_file(rgb_img, file_base_name+'.jpg'),
-        'thumbnail': to_content_file(thumbnail, file_base_name+'_thumbnail.jpg'),
-    }
-    form = UpdatePhotoForm(
-        instance=photo,
-        data=data,
-        files=files,
+    photo.image.save(file_base_name + '.jpg', to_content_file(rgb_img, file_base_name + '.jpg'), save=False)
+    photo.thumbnail.save(
+        file_base_name + '_thumbnail.jpg',
+        to_content_file(thumbnail, file_base_name + '_thumbnail.jpg'),
+        save=False,
     )
-    if form.is_valid():
-        form.save()
-        photo.refresh_from_db()
-        if photo.image.path != image_path:
-            os.remove(image_path)
+
+    if creation_date:
+        photo.created_at = creation_date
+    photo.save(update_fields=['image', 'thumbnail', 'created_at'])
+    photo.refresh_from_db()
+    if photo.image.path != image_path:
+        os.remove(image_path)
 
 
 def to_jpg(path):

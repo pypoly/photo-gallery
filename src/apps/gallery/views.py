@@ -66,8 +66,6 @@ class PhotoCreateView(LoginRequiredMixin, CreateView):
         return reverse('gallery:photo', kwargs={'pk': self.object.id})
 
     def form_valid(self, form):
-        form: PhotoCreateForm
-        print(form.cleaned_data)
         form.instance.user = self.request.user
         response = super().form_valid(form)
         create_thumbnail.delay(form.instance.id)
@@ -97,7 +95,7 @@ class PhotoUpdateView(LoginRequiredMixin, UpdateView):
         photo = self.get_object()
         if photo.user != self.request.user:
             raise Http404
-        return super().post(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse('gallery:photo', kwargs={'pk': self.object.id})
@@ -132,17 +130,11 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
     form_class = AlbumCreateForm
     template_name = 'gallery/album_create.html'
 
-    def post(self, request, *args, **kwargs):
-        resp = super().post(request, *args, **kwargs)
-        print('POST')
-        return resp
-
     def get_success_url(self):
         return reverse('gallery:album_list')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        print('SAVE ALBUM')
         return super().form_valid(form)
 
     # def get(self, request, *args, **kwargs):
@@ -155,12 +147,6 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
 class AlbumDetailView(LoginRequiredMixin, DetailView):
     model = Album
     template_name = 'gallery/album_detail.html'
-
-    def post(self, request, *args, **kwargs):
-        path = self.get_object().image.path
-        if os.path.exists(path):
-            os.unlink(path)
-        return super().post(request, *args, **kwargs)
 
 
 class AlbumUpdateView(LoginRequiredMixin, UpdateView):
