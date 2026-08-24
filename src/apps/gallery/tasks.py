@@ -19,9 +19,8 @@ def create_thumbnail(photo_id: int):
     if not os.path.exists(image_path):
         return
 
-    rgb_img = to_jpg(photo.image.path)
-    thumbnail = rgb_img.copy()
-    thumbnail.thumbnail((250, 250), Image.Resampling.LANCZOS)
+
+    rgb_img, thumbnail = process_file(photo.image.path)
     creation_date = get_creation_date(image_path)
 
     file_base_name = os.path.splitext(os.path.basename(image_path))[0]
@@ -38,6 +37,13 @@ def create_thumbnail(photo_id: int):
     photo.refresh_from_db()
     if photo.image.path != image_path:
         os.remove(image_path)
+
+
+def process_file(path: str) -> tuple[str, str]:
+    rgb_img = to_jpg(path)
+    thumbnail = rgb_img.copy()
+    thumbnail.thumbnail((250, 250), Image.Resampling.LANCZOS)
+    return rgb_img, thumbnail
 
 
 def to_jpg(path):
