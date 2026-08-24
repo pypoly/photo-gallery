@@ -29,7 +29,7 @@ class Photo(models.Model):
     thumbnail = models.ImageField(upload_to=get_upload_thumbnail_path, null=True, blank=True)
     created_at = models.DateTimeField(null=True, blank=True)
     uploaded_at = models.DateTimeField(auto_now=True, null=True, blank=True)
-    album = models.ForeignKey('gallery.Album', on_delete=models.SET_NULL, null=True, blank=True)
+    album = models.ForeignKey('gallery.Album', on_delete=models.SET_NULL, null=True, blank=True, related_name='photos')
 
     def __str__(self):
         return self.image.name

@@ -66,6 +66,8 @@ class PhotoCreateView(LoginRequiredMixin, CreateView):
         return reverse('gallery:photo', kwargs={'pk': self.object.id})
 
     def form_valid(self, form):
+        form: PhotoCreateForm
+        print(form.cleaned_data)
         form.instance.user = self.request.user
         response = super().form_valid(form)
         create_thumbnail.delay(form.instance.id)
@@ -85,6 +87,11 @@ class PhotoUpdateView(LoginRequiredMixin, UpdateView):
     model = Photo
     template_name = 'gallery/photo_update.html'
     form_class =  UpdatePhotoForm
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['album'].queryset = Album.objects.filter(user=self.request.user)
+        return form
 
     def dispatch(self, request, *args, **kwargs):
         photo = self.get_object()
