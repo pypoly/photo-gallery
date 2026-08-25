@@ -27,7 +27,8 @@ SECRET_KEY = 'django-insecure-ez)25zoob184af^(!ee8!($jknl)%_0vjga$8uw0j%emesgc+a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['gallery.paulwinex.com']
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
