@@ -139,3 +139,5 @@ JAZZMIN_SETTINGS = {
         {"name": "Вернуться на сайт", "url": "gallery:index"},
     ]
     }
+
+CSRF_TRUSTED_ORIGINS = 'https://gallery.paulwinex.com'
