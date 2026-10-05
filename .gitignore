@@ -11,3 +11,4 @@ data/
 .idea/
 *sqlite3
 *override*
+.env
