@@ -28,8 +28,8 @@ SECRET_KEY =os.getenv('DJANGO_SECRET_KEY')
 DEBUG = bool(os.getenv('DEBUG'))
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
-print('ALLOWED_HOSTS', ALLOWED_HOSTS)
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+# print('ALLOWED_HOSTS', ALLOWED_HOSTS)
+# CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
 
 if DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -144,4 +144,4 @@ JAZZMIN_SETTINGS = {
     ]
     }
 
-CSRF_TRUSTED_ORIGINS = 'https://gallery.paulwinex.com'
+# CSRF_TRUSTED_ORIGINS = 'https://gallery.paulwinex.com'
