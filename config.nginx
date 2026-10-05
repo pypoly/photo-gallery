@@ -1,7 +1,7 @@
 server {
     listen 80;
     listen [::]:80;
-    server_name gallery.paulwinex.com;
+    server_name example.com;
 
     client_max_body_size 50M;
 
