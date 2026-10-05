@@ -29,6 +29,8 @@ DEBUG = bool(os.getenv('DEBUG'))
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 print('ALLOWED_HOSTS', ALLOWED_HOSTS)
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+
 if DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_CROSS_ORIGIN_OPENER_POLICY = None
