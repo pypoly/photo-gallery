@@ -131,7 +131,7 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
     template_name = 'gallery/album_create.html'
 
     def get_success_url(self):
-        return reverse('gallery:album_list')
+        return reverse('gallery:index-page')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -183,7 +183,7 @@ class UserRegisterView(CreateView):
 
     def get(self, request: HttpRequest, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect('gallery:index')
+            return redirect('gallery:photo-list')
         return super().get(request, *args, **kwargs)
 
 class UserProfileView(LoginRequiredMixin, DetailView):

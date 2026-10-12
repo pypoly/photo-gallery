@@ -16,7 +16,7 @@ urlpatterns = [
     # path('profile', UserProfileView.as_view(), name='profile'),
     path('profile', PasswordChangeView.as_view(
         template_name='gallery/profile.html',
-        success_url=reverse_lazy("gallery:index"),
+        success_url=reverse_lazy("gallery:index-page"),
         # form_class=PasswordChangeForm
     ), name='profile'),
     path('', include('apps.gallery.urls', namespace='gallery')),

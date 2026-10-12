@@ -139,6 +139,6 @@ JAZZMIN_UI_TWEAKS = {
 
 JAZZMIN_SETTINGS = {
     "topmenu_links": [
-        {"name": "Вернуться на сайт", "url": "gallery:index"},
+        {"name": "Вернуться на сайт", "url": "gallery:index-page"},
     ]
     }
