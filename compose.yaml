@@ -12,6 +12,7 @@ services:
       - ./data:/app/data
     environment:
       REDIS_HOST: "${APP_NAME}-redis"
+      POSTGRES_HOST: "${APP_NAME}-pg"
     networks:
       - main
     depends_on:
@@ -25,6 +26,7 @@ services:
     entrypoint: ["/app/src/entrypoint-worker.sh"]
     environment:
       REDIS_HOST: "${APP_NAME}-redis"
+      POSTGRES_HOST: "${APP_NAME}-pg"
     volumes:
       - ./data:/app/data
 #      - ./src:/app
@@ -43,6 +45,24 @@ services:
 #      - '6379:6379'
     networks:
       - main
+
+
+  db:
+    image: postgres:17-alpine
+    container_name: "${APP_NAME}-pg"
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       ${POSTGRES_DB}
+      POSTGRES_USER:     ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./data/pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
 networks:
   main:
