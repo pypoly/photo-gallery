@@ -38,6 +38,10 @@ class Photo(models.Model):
         verbose_name_plural = "Фото"
         ordering = ['-uploaded_at']
 
+        indexes = [
+            models.Index(fields=['user', 'created_at']),
+        ]
+
 def get_album_path(instance, filename):
     base, ext = os.path.splitext(filename)
     return os.path.join(

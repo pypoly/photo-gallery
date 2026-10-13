@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest, Http404
 from django.urls import reverse
 from django.views.generic import ListView, UpdateView, DetailView, CreateView, DeleteView
-
+from django.core.paginator import Paginator
 from apps.gallery.forms import UpdatePhotoForm, PhotoCreateForm, AlbumCreateForm, AlbumUpdateForm, PhotoFilterForm, UserRegisterForm
 from apps.gallery.models import Photo, Album
 from .tasks import create_thumbnail
@@ -147,6 +147,18 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
 class AlbumDetailView(LoginRequiredMixin, DetailView):
     model = Album
     template_name = 'gallery/album_detail.html'
+    paginate_by = 16
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+        obj = self.get_object()
+        q = obj.photos.all().order_by('-uploaded_at')
+        paginator = Paginator(q, self.paginate_by)
+        page_number = self.request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+        ctx['page_obj'] = page_obj
+        ctx['photos'] = page_obj.object_list
+        return ctx
 
 
 class AlbumUpdateView(LoginRequiredMixin, UpdateView):

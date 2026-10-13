@@ -13,7 +13,6 @@ DATETIME_FORMAT = '%Y:%m:%d %H:%M:%S'
 
 @app.task
 def create_thumbnail(photo_id: int):
-    # photo_id = 16
     photo = Photo.objects.get(pk=photo_id)
     image_path = photo.image.path
     if not os.path.exists(image_path):
