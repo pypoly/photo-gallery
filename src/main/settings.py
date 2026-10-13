@@ -47,10 +47,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.gallery.apps.GalleryConfig',
 
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
-    # "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -95,6 +96,7 @@ DATABASES = {
         'PORT': '5432',
         }
 }
+
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -146,3 +148,9 @@ JAZZMIN_SETTINGS = {
         {"name": "Вернуться на сайт", "url": "gallery:index-page"},
     ]
     }
+
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+
+]
